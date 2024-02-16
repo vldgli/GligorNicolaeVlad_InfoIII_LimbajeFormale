@@ -1,0 +1,55 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+
+vector<char> sig1 = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+vector<char> sig2 = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'i', 'j', 'k'};
+vector<char> sig3 = { 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v' };
+
+
+string concat(string s1, std::string s2) {
+    return s1 + s2;
+}
+
+string repeat(string s, int n) {
+    string result = "";
+    for (int i = 0; i < n; i++) {
+        result += s;
+    }
+    return result;
+}
+
+string reverse(string s) {
+    reverse(s.begin(), s.end());
+    return s;
+}
+
+string extract(string s, int i, int j) {
+    string str = "";
+    for (int k = i; k <= j; k++) {
+        str = str + s[k];
+    }
+    return str;
+}
+
+string replace(string s, string sub, string new_sub) {
+    size_t pos = s.find(sub);
+    return s.replace(pos, sub.length(), new_sub);
+
+}
+
+int main() {
+    //string S1 = "012345";
+    //string S2 = "abcdef";
+    string S1, S2;
+    for (int i = 0; i < 6; i++) {
+        S1 = S1 + sig1[i];
+        S2 = S2 + sig2[i];
+    }
+    cout << concat(S1, S2) << endl;
+    cout << repeat(S2, 3) << endl;
+    cout << reverse(S1) << endl;
+    cout << extract(S1, 2, 4) << endl;
+    cout << replace(S1, "123", "abcd") << endl;
+}

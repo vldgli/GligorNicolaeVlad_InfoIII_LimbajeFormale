@@ -1,0 +1,186 @@
+Ex 1:
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main() {
+    vector<int> alphabet = { 0, 1, 2 }; 
+
+    for (int length = 1; length <= 5; ++length) {
+        cout << "Palindroame de lungime " << length << ":" << endl;
+
+        if (length == 1) {
+            for (int i : alphabet) {
+                cout << i << endl;
+            }
+        }
+        else {
+            for (size_t i = 0; i < alphabet.size(); ++i) {
+                if (length == 2) {
+                    cout << alphabet[i] << alphabet[i] << endl;
+                }
+                else {
+                    for (size_t j = 0; j < alphabet.size(); ++j) {
+                        if (length == 3) {
+                            cout << alphabet[i] << alphabet[j] << alphabet[i] << endl;
+                        }
+                        else if (length == 4) {
+                            cout << alphabet[i] << alphabet[j] << alphabet[j] << alphabet[i] << endl;
+                        }
+                        else if (length == 5) {
+                            for (size_t k = 0; k < alphabet.size(); ++k) {
+                                cout << alphabet[i] << alphabet[j] << alphabet[k] << alphabet[j] << alphabet[i] << endl;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return 0;
+}
+
+
+
+Ex 2:
+
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+void applyRules(string current, vector<string>& result) {
+    result.push_back('a' + current + 'a');
+    result.push_back('b' + current + 'b');
+}
+
+vector<string> generateIteration(vector<string>& previousIteration) {
+    vector<string> result;
+    for (const auto& str : previousIteration) {
+        applyRules(str, result);
+    }
+    return result;
+}
+
+int main() {
+    vector<string> iteration = { "a", "b", "" }; 
+
+    for (int i = 0; i <= 3; ++i) {
+        cout << "Iteratia " << i << ":" << endl;
+        for (const string& str : iteration) {
+             cout << str << endl;
+        }
+        cout << endl;
+
+        if (i < 3) {
+            iteration = generateIteration(iteration);
+        }
+    }
+
+    return 0;
+}
+
+
+Ex 3: 
+
+a:
+
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+void generateA(string current, vector<string>& result, int depth) {
+    if (depth == 0) {
+        result.push_back(current);
+        return;
+    }
+    generateA(current + 'a', result, depth - 1);
+    result.push_back(current);  
+}
+
+void generateB(string current, vector<string>& result, int depth) {
+    if (depth == 0) {
+        result.push_back(current);
+        return;
+    }
+    generateB(current + 'b', result, depth - 1);
+    result.push_back(current);  
+}
+
+int main() {
+    vector<string> resultA;
+    vector<string> result;
+
+    generateA("", resultA, 2); 
+
+    for (const string& a : resultA) {
+        vector<string> resultB;
+        generateB(a, resultB, 2);
+        for (const string& b : resultB) {
+            result.push_back(a + b); 
+        }
+    }
+
+    
+    for (const string& str : result) {
+        cout << str << endl;
+    }
+
+    return 0;
+}
+
+b:
+
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+void generateX(string current, vector<string>& result, int depth);
+
+void generateY(string current, vector<string>& result, int depth) {
+    if (depth == 0) {
+        result.push_back(current);
+        return;
+    }
+    result.push_back(current + '2');
+    generateX(current, result, depth - 1);
+}
+
+void generateZ(string current, vector<string>& result, int depth) {
+    if (depth == 0) {
+        result.push_back(current);
+        return;
+    }
+    result.push_back(current + '3');
+    result.push_back(current + '4');
+    generateX(current, result, depth - 1);
+}
+
+void generateX(string current, vector<string>& result, int depth) {
+    if (depth == 0) {
+        result.push_back(current);
+        return;
+    }
+    generateY(current + '0', result, depth - 1);
+    generateZ(current + '1', result, depth - 1);
+}
+
+int main() {
+    vector<string> result;
+    generateX("", result, 5); 
+
+    
+    for (size_t i = 0; i < result.size(); ++i) {
+        cout << result[i] << endl;
+    }
+
+    return 0;
+}

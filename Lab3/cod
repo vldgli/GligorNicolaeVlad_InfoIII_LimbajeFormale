@@ -1,0 +1,203 @@
+1:
+#include <iostream>
+#include <string>
+
+class BeverageMachine {
+public:
+    enum State { q0, q1, q2, q3, q4 }; 
+    enum Input { C, T, A, H, OK };     
+
+private:
+    State currentState;
+
+public:
+    BeverageMachine() : currentState(q0) {}
+
+    void transitionFunction(Input input) {
+        switch (currentState) {
+        case q0:
+            switch (input) {
+            case C: currentState = q1; break;
+            case T: currentState = q2; break;
+            case A: currentState = q3; break;
+            case H: currentState = q4; break;
+            default: break;
+            }
+            break;
+        case q1:
+        case q2:
+        case q3:
+            if (input == OK) currentState = q4;
+            break;
+        case q4:
+            if (input == OK) currentState = q0;
+            break;
+        default:
+            break;
+        }
+    }
+
+    std::string getCurrentState() const {
+        switch (currentState) {
+        case q0: return "Asteptare selectie";
+        case q1: return "Cafea selectata";
+        case q2: return "Ceai selectat";
+        case q3: return "Cappuccino selectat";
+        case q4: return "Comanda finalizata";
+        default: return "Stare necunoscuta";
+        }
+    }
+};
+
+int main() {
+    BeverageMachine machine;
+    std::cout << "Input:";
+    machine.transitionFunction(BeverageMachine::C);
+    std::cout << "Stare curenta: " << machine.getCurrentState() << std::endl;
+    machine.transitionFunction(BeverageMachine::OK);
+    std::cout << "Stare curenta: " << machine.getCurrentState() << std::endl;
+    return 0;
+}
+
+2:
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+
+void generateWords(vector<char> alphabet, int maxLength) {
+    vector<string> words;
+
+    
+    for (char i : alphabet) {
+        for (char j : alphabet) {
+            for (char k : alphabet) {
+                if (i != j && i != k && j != k) {
+                    string word = "";
+                    word += string(2, i) + string(2, j) + string(2, k);
+                    words.push_back(word);
+                }
+            }
+        }
+    }
+
+    for (string word : words) {
+            cout << word << endl;
+    }
+}
+
+int main() {
+    vector<char> alphabet = { 'a', 'b', 'c', 'd' };
+    int maxLength = 6;
+
+    generateWords(alphabet, maxLength);
+
+    return 0;
+}
+
+3:
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <regex>
+
+bool verificaClient(const std::string& text) {
+    std::regex clientRegex("[A-Za-z0-9 ,.]+");
+    return std::regex_search(text, clientRegex);
+}
+
+
+bool verificaProduse(const std::string& text) {
+    std::regex produsRegex("[A-Za-z ]+ \\d+");
+    return std::regex_search(text, produsRegex);
+}
+
+
+bool verificaSumar(const std::string& text) {
+    std::regex sumarRegex("\\d+(\\.\\d{1,2})?");
+    return std::regex_search(text, sumarRegex);
+}
+
+
+std::string citesteSectiune(std::ifstream& fisier, const std::string& eticheta) {
+    std::string linie, sectiune;
+    bool inSectiune = false;
+
+   
+    fisier.clear();
+    fisier.seekg(0, std::ios::beg);
+
+    while (std::getline(fisier, linie)) {
+        
+        if (linie[0] == '[' && linie.back() == ']') {
+            if (linie == eticheta) {
+                
+                inSectiune = !inSectiune;
+                
+                continue;
+            }
+            else if (inSectiune) {
+                
+                break;
+            }
+        }
+
+        
+        if (inSectiune) {
+            sectiune += linie + "\n";
+        }
+    }
+
+    return sectiune;
+}
+
+
+int main() {
+    std::string caleFisier;
+    std::cout << "Introduceti calea catre fisierul text de verificat: ";
+    std::cin >> caleFisier;
+
+    std::ifstream fisier(caleFisier);
+    if (!fisier.is_open()) {
+        std::cout << "Eroare la deschiderea fisierului!" << std::endl;
+        return 1;
+    }
+    
+
+    std::string continutClient = citesteSectiune(fisier, "[Client]");
+    std::cout << "Continut Sectiune [Client]:\n" << continutClient << "\n";
+
+    std::string continutProduse = citesteSectiune(fisier, "[Produse]");
+    std::cout << "Continut Sectiune [Produse]:\n" << continutProduse << "\n";
+
+    std::string continutSumar = citesteSectiune(fisier, "[Sumar]");
+    std::cout << "Continut Sectiune [Sumar]:\n" << continutSumar << "\n";
+
+
+    fisier.close();
+
+    bool eroare = false;
+
+    if (!verificaClient(continutClient)) {
+        std::cout << "Informatii client lipsa sau incorecte." << std::endl;
+        eroare = true;
+    }
+
+    if (!verificaProduse(continutProduse)) {
+        std::cout << "Detalii produs lipsa sau incorecte." << std::endl;
+        eroare = true;
+    }
+
+    if (!verificaSumar(continutSumar)) {
+        std::cout << "Sumarul facturii lipsa sau incorect." << std::endl;
+        eroare = true;
+    }
+
+    if (!eroare) {
+        std::cout << "Formatul facturii este corect." << std::endl;
+    }
+
+    return 0;
+}

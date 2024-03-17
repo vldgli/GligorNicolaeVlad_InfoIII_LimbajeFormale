@@ -1,0 +1,92 @@
+ex2:
+
+#include <iostream>
+using namespace std;
+
+enum State { S1, S2 };
+enum Output { O1, O2 };
+
+State transition(State current, char input) {
+    if (current == S1) {
+        if (input == 'A') {
+            return S1;
+        }
+        else {
+            return S2;
+        }
+    }
+    else if (current == S2) {
+        if (input == 'A') {
+            return S1;
+        }
+        else {
+            return S2;
+        }
+    }
+}
+
+Output getOutput(State state) {
+    return (state == S1) ? O1 : O2;
+}
+
+int main() {
+    State currentState = S1;
+    string inputs;
+    cout << "Enter a sequence of inputs (A/B): ";
+    cin >> inputs;
+
+    for (char input : inputs) {
+        currentState = transition(currentState, input);
+        Output currentOutput = getOutput(currentState);
+        cout << "Input: " << input << ", State: " << (currentState == S1 ? "S1" : "S2") << ", Output: " << (currentOutput == O1 ? "01" : "02") << endl;
+    }
+
+    return 0;
+}
+
+ex3:
+
+#include <iostream>
+using namespace std;
+
+enum State { Q1, Q2 };
+enum Output { O1, O2 };
+
+State transition(State current, char input, Output& out) {
+    if (current == Q1) {
+        if (input == 'X') {
+            out = O1;
+            return Q2;
+        }
+        else { 
+            out = O1;
+            return Q1;
+        }
+    }
+    else { 
+        if (input == 'X') {
+            out = O2;
+            return Q1;
+        }
+        else { 
+            out = O2;
+            return Q2;
+        }
+    }
+}
+
+int main() {
+    State currentState = Q1;
+    Output currentOutput;
+    string inputs;
+
+    cout << "Enter a sequence of inputs (X/Y): ";
+    cin >> inputs;
+
+    for (char input : inputs) {
+        currentState = transition(currentState, input, currentOutput);
+        cout << "Input: " << input << ", State: " << (currentState == Q1 ? "Q1" : "Q2") << ", Output: " << (currentOutput == O1 ? "O1" : "O2") << endl;
+    }
+
+    return 0;
+}

@@ -1,0 +1,55 @@
+1)
+#include <iostream>
+#include <regex>
+#include <string>
+
+using namespace std; 
+
+int main() {
+    
+    regex reg("0*1(0|10*1)*");
+
+    
+    string strings[] = { "1", "001", "0001", "10", "110", "1001", "00001", "101", "1101" };
+
+    
+    for (const string& s : strings) {
+        if (regex_match(s, reg)) {
+            cout << "Sirul \"" << s << "\" corespunde expresiei regulate.\n";
+        }
+        else {
+            cout << "Sirul \"" << s << "\" NU corespunde expresiei regulate.\n";
+        }
+    }
+
+    return 0;
+}
+
+
+
+3)
+#include <iostream>
+#include <regex>
+#include <string>
+
+using namespace std;
+
+bool validatePostalCode(const string& postalCode) {
+    regex pattern("^[1-9][0-9]{4}$");
+    return regex_match(postalCode, pattern);
+}
+
+int main() {
+    string postalCode;
+    cout << "Introduceti codul postal: ";
+    cin >> postalCode;
+
+    if (validatePostalCode(postalCode)) {
+        cout << "Codul postal este valid.\n";
+    }
+    else {
+        cout << "Codul postal nu este valid.\n";
+    }
+
+    return 0;
+}

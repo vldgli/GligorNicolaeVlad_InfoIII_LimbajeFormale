@@ -1,0 +1,41 @@
+1.
+(1+00*1)+(1+00*1)(0+10*1)*(0+10*1)=0*1(0+10*1)*
+R=(0+10*1)
+(1+00*1)+(1+00*1)R*R
+(1+00*1)+(1+00*1)R*
+(1+00*1)R*
+(1+00*1)(0+10*1)*
+(E+00*)1(0+10*1)*
+0*1(0+10*1)*
+
+
+2.
+a)
+L={0^i 1^j | i>j} is not regular
+Assume L is regular
+constant n exists
+w=0^n 1^n-1
+|y|>0, y!=E 
+|xy|<=n
+x=0^p y=1 z=1^p-2
+0^p 1^i 1^p-2
+i=0:0^p 1^0 1^p-2 = 0^p 1^p-2
+i=2:0^p 1^2 1^p-2 = 0^p 1^p NOT IN L 
+
+b)L={a^i b^j | i<=j}
+Assume L is regular
+constant n exists
+w=a^n b^n
+|y|>0, y!=E 
+|xy|<=n
+x=a^n y=b z=b^n-1
+a^p b^i b^p-1
+i=0:a^p b^0 b^p-1=a^p b^p-1 NOT IN L
+
+c)L={a^n b^n c^n | n>0}
+Assume L is regular
+constant n exists
+w=a^p b^p c^p
+|y|>0, y!=E 
+|xy|<=n
+x=a^p y=b^p z=c^p 

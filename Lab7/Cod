@@ -1,0 +1,268 @@
+1)
+#include <iostream>
+#include <vector>
+#include <string>
+#include <memory>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+class ParseNode {
+public:
+    string symbol;
+    vector<shared_ptr<ParseNode>> children;
+
+    ParseNode(const string& sym) : symbol(sym) {}
+
+    void addChild(shared_ptr<ParseNode> child) {
+        children.push_back(child);
+    }
+
+    void print() const {
+        if (children.empty()) { 
+            cout << symbol;
+        }
+        else {
+            
+            for (const auto& child : children) {
+                child->print();
+                
+                if (child != children.back()) {
+                    cout << " ";
+                }
+            }
+        }
+    }
+};
+
+shared_ptr<ParseNode> parseE(int depth);
+shared_ptr<ParseNode> parseI(int depth);
+shared_ptr<ParseNode> parseTerminal(const string& terminal);
+
+shared_ptr<ParseNode> parseE(int depth) {
+    shared_ptr<ParseNode> node = make_shared<ParseNode>("E");
+
+    
+    if (depth > 5) {
+        return parseI(depth);  
+    }
+
+    int rule = rand() % 3;
+    switch (rule) {
+    case 0:
+        node->addChild(parseE(depth + 1));
+        node->addChild(parseTerminal("+"));
+        node->addChild(parseE(depth + 1));
+        break;
+    case 1:
+        node->addChild(parseE(depth + 1));
+        node->addChild(parseTerminal("*"));
+        node->addChild(parseE(depth + 1));
+        break;
+    case 2:
+        node->addChild(parseTerminal("("));
+        node->addChild(parseE(depth + 1));
+        node->addChild(parseTerminal(")"));
+        break;
+    }
+    return node;
+}
+
+shared_ptr<ParseNode> parseI(int depth) {
+    shared_ptr<ParseNode> node = make_shared<ParseNode>("I");
+
+    if (depth > 50) {
+        
+        return parseTerminal(rand() % 2 == 0 ? "0" : "1");
+    }
+
+    int rule = rand() % 4;
+    switch (rule) {
+    case 0:
+        node->addChild(parseTerminal("a"));
+        break;
+    case 1:
+        node->addChild(parseTerminal("b"));
+        break;
+    case 2:
+        node->addChild(parseI(depth + 1));
+        node->addChild(parseTerminal("0"));
+        break;
+    case 3:
+        node->addChild(parseI(depth + 1));
+        node->addChild(parseTerminal("1"));
+        break;
+    }
+    return node;
+}
+
+shared_ptr<ParseNode> parseTerminal(const string& terminal) {
+    return make_shared<ParseNode>(terminal);
+}
+
+int main() {
+    srand(static_cast<unsigned>(time(nullptr)));
+
+    shared_ptr<ParseNode> parseTree = parseE(0);
+    parseTree->print();
+    cout << endl;
+
+    return 0;
+}
+-------------------------
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+
+string parseE();
+string parseI();
+
+
+string parseE() {
+    int rule = rand() % 4; 
+    switch (rule) {
+    case 0: return parseI(); 
+    case 1: return parseE() + " + " + parseE(); 
+    case 2: return parseE() + " * " + parseE(); 
+    case 3: return "(" + parseE() + ")"; 
+    }
+    return "";
+}
+
+
+string parseI() {
+    int rule = rand() % 6;
+    switch (rule) {
+    case 0: return "a"; 
+    case 1: return "b"; 
+    case 2: return parseI() + "a"; 
+    case 3: return parseI() + "b"; 
+    case 4: return parseI() + "0"; 
+    case 5: return parseI() + "1"; 
+    }
+    return "";
+}
+
+int main() {
+    srand(static_cast<unsigned int>(time(nullptr))); 
+
+    
+    string expression = parseE();
+
+   
+    cout << "Expresia generata: " << expression << endl;
+
+    return 0;
+}
+
+
+2)
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+class DecisionNode {
+public:
+    string name;
+    vector<DecisionNode*> children;
+    int score; 
+
+    DecisionNode(string name, int score = 0) : name(name), score(score) {}
+
+    ~DecisionNode() {
+        for (auto& child : children) {
+            delete child;
+        }
+    }
+
+    void addChild(DecisionNode* child) {
+        children.push_back(child);
+    }
+
+    void print(const string& prefix = "") const {
+        cout << prefix << name << " (Scor: " << score << ")" << endl;
+        for (const auto& child : children) {
+            child->print(prefix + "  ");
+        }
+    }
+};
+
+int evaluateDecision(DecisionNode* node) {
+    int totalScore = node->score;
+    for (auto& child : node->children) {
+        totalScore += evaluateDecision(child);
+    }
+    return totalScore;
+}
+
+
+DecisionNode* createDecisionTree() {
+    DecisionNode* root = new DecisionNode("PlanificareaVacantei");
+
+    
+    DecisionNode* destMare = new DecisionNode("DestinatieMare", 5); 
+    DecisionNode* destMunte = new DecisionNode("DestinatieMunte", 7);
+    DecisionNode* destOras = new DecisionNode("DestinatieOras", 6);
+
+    DecisionNode* buget = new DecisionNode("Buget", 10);
+    DecisionNode* interese = new DecisionNode("Interese", 8);
+    DecisionNode* vreme = new DecisionNode("Vreme", 7);
+
+    
+    destMare->addChild(buget);
+    destMare->addChild(interese);
+    destMare->addChild(vreme);
+
+    destMunte->addChild(buget);
+    destMunte->addChild(interese);
+    destMunte->addChild(vreme);
+
+    destOras->addChild(buget);
+    destOras->addChild(interese);
+    destOras->addChild(vreme);
+
+    
+    root->addChild(destMare);
+    root->addChild(destMunte);
+    root->addChild(destOras);
+
+    return root;
+}
+
+int main() {
+    DecisionNode* decisionTree = createDecisionTree();
+
+    cout << "Arborele de decizie:\n";
+    decisionTree->print();
+
+    
+    int scorMare = evaluateDecision(decisionTree->children[0]);
+    int scorMunte = evaluateDecision(decisionTree->children[1]);
+    int scorOras = evaluateDecision(decisionTree->children[2]);
+
+    cout << "Scorul pentru DestinatieMare: " << scorMare << endl;
+    cout << "Scorul pentru DestinatieMunte: " << scorMunte << endl;
+    cout << "Scorul pentru DestinatieOras: " << scorOras << endl;
+
+    
+    cout << "Decizia sugerata: ";
+    if (scorMare >= scorMunte && scorMare >= scorOras) {
+        cout << "DestinatieMare" << endl;
+    }
+    else if (scorMunte >= scorMare && scorMunte >= scorOras) {
+        cout << "DestinatieMunte" << endl;
+    }
+    else {
+        cout << "DestinatieOras" << endl;
+    }
+
+    delete decisionTree; 
+    return 0;
+}

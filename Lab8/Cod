@@ -1,0 +1,46 @@
+#include <iostream>
+#include <stack>
+#include <string>
+using namespace std;
+
+class PushdownAutomaton {
+public:
+    bool recognize(const string& input) {
+        stack<char> stack;
+
+        for (char ch : input) {
+            if (ch == '0') {
+                stack.push(ch);
+            }
+            else if (ch == '1') {
+                if (stack.empty()) {
+                    return false;
+                }
+                stack.pop();
+            }
+            else {
+                
+                return false;
+            }
+        }
+
+        return stack.empty();
+    }
+};
+
+int main() {
+    PushdownAutomaton pda;
+    string input;
+
+    cout << "Enter a string to be tested: ";
+    cin >> input;
+
+    if (pda.recognize(input)) {
+        cout << "String accepted." << endl;
+    }
+    else {
+        cout << "String rejected." << endl;
+    }
+
+    return 0;
+}
